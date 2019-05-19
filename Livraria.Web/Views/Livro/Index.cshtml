@@ -100,7 +100,7 @@
                 <td data-bind="text: editora"></td>
                 <td data-bind="text: anoPublicacao"></td>
                 <td data-bind="text: autor"></td>
-                <td data-bind="text: exemplares().length"></td>
+                <td class="btn-link" data-bind="text: exemplares().length, attr: { title: exemplares }"></td>
                 <td>
                     <button class="btn btn-primary" data-bind="click: editBook">Edit</button>
                     <button class="btn btn-dark" data-bind="click: deleteBook">Delete</button>
