@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Livraria.ApplicationCore.Models.Base;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Livraria.ApplicationCore.Models.Livros.DTOs.Responses
 {
-    public class LivroResponse
+    public class LivroResponse : BaseResponse
     {
         public int Id { get; private set; }
         public string Titulo { get; private set; }
@@ -14,6 +15,10 @@ namespace Livraria.ApplicationCore.Models.Livros.DTOs.Responses
 
         #region Constructor
 
+        public LivroResponse(bool status, string message) : base(status, message)
+        {
+
+        }
         public LivroResponse(Entity.Livros dbLivro)
         {
             this.Id = dbLivro.LivroId;

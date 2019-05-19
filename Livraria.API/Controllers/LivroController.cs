@@ -1,4 +1,5 @@
-﻿using Livraria.ApplicationCore.Models.Exemplar.Services.Interfaces;
+﻿using Livraria.ApplicationCore.Models.Base;
+using Livraria.ApplicationCore.Models.Exemplar.Services.Interfaces;
 using Livraria.ApplicationCore.Models.Livros.DTOs.Requests;
 using Livraria.ApplicationCore.Models.Livros.DTOs.Responses;
 using Livraria.ApplicationCore.Models.Livros.Exception;
@@ -65,25 +66,24 @@ namespace Livraria.API.Controllers
             try
             {
                 if (request == null)
-                    return BadRequest("A request não foi encontrada");
-
-                if (!ModelState.IsValid)
-                    return BadRequest("Informações incorretas");
+                    return BadRequest(new LivroResponse(false, "A request não foi encontrada"));
 
                 livroResponse = _livroService.Add(request);
 
                 if (livroResponse == null)
-                    return BadRequest("Não foi possível cadastrar o livro informado");
+                    return BadRequest(new LivroResponse(false, "Não foi possível cadastrar o livro informado"));
             }
             catch(LivroException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new LivroResponse(false, ex.Message));
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new LivroResponse(false, "Internal Server error"));
             }
 
+            livroResponse.Status = true;
+            livroResponse.Message = "Cadastro realizado com sucesso";
             return Ok(livroResponse);
         }
 
@@ -101,22 +101,24 @@ namespace Livraria.API.Controllers
             try
             {
                 if (id == 0)
-                    return NotFound("Não foi possível localizar o id informado para alteração");
+                    return NotFound(new LivroResponse(false, "Não foi possível localizar o id informado para alteração"));
 
                 if (id != request.Id)
-                    return BadRequest("O Id informado não condiz com o Id informado na request");
+                    return BadRequest(new LivroResponse(false, "O Id informado não condiz com o Id informado na request"));
 
                 livroResponse = _livroService.Update(request);
             }
             catch(LivroException ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new LivroResponse(false, ex.Message));
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new LivroResponse(false, "Internal Server error"));
             }
 
+            livroResponse.Status = true;
+            livroResponse.Message = "Edição realizada com sucesso";
             return Ok(livroResponse);
         }
 
@@ -132,19 +134,21 @@ namespace Livraria.API.Controllers
             try
             {
                 if (id == 0)
-                    return NotFound("Não foi possível localizar o id informado para alteração");
+                    return NotFound(new BaseResponse(false, "Não foi possível localizar o id informado para alteração"));
 
                 if (id != request.Id)
-                    return BadRequest("O Id informado não condiz com o Id informado na request");
+                    return BadRequest(new BaseResponse(false, "O Id informado não condiz com o Id informado na request"));
 
                 _livroService.Delete(request);
             }
             catch (Exception)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(new BaseResponse(false, "Internal Server error"));
             }
 
-            return Ok("Livro excluído com sucesso");
+            return Ok(new BaseResponse(true, "Livro excluído com sucesso"));
         }
+
+
     }
 }
